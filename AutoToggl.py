@@ -1,8 +1,9 @@
 import base64
+import collections
+import importlib
 import json
 import os
 import time
-import collections
 from collections import OrderedDict, defaultdict
 from datetime import date, datetime, timedelta
 from operator import itemgetter
@@ -174,6 +175,7 @@ class AutoToggl:
                             "Customer": customer["Name"],
                             "Weekday": entry["WeekDay"],
                             "Date": str(entry["Date"]),
+                            "Description": customer["Description"],
                         }
 
                         reported.append((apiOutCome.copy()))
@@ -193,8 +195,10 @@ class AutoToggl:
                 )
                 for entry in groupDate:
                     print(
-                        "CompanyName: {0}\nDuration: {1}".format(
-                            entry["Customer"], entry["DurationInHours"]
+                        "CompanyName: {0}\n\tDuration: {1}\n\tDescription: {2}".format(
+                            entry["Customer"],
+                            entry["DurationInHours"],
+                            entry["Description"],
                         )
                     )
         if not reported:
@@ -206,11 +210,7 @@ token = config.settings["token"]
 country = config.settings["country"]
 fullDayHours = config.settings["fullDayHours"]
 weeks = config.settings["weeks"]
-if config.settings["reportVacation"] == True:
-    inputObject = config.vacation
-else:
-    inputObject = config.projects
-
+inputObject = config.inputObj
 
 if time.localtime().tm_isdst == 0:
     offset = time.timezone
