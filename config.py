@@ -1,14 +1,23 @@
 settings = {
     "token": "Toggl API KEY found under your Profil on toggl.com",
-    "reportVacation": True,
+    # Only one of the Report settings can be set to True at a given time. if multiple reports are set to True nothing will happen.
+    "reportWork": True,
+    "reportVacation": False,
+    "reportParentalLeave": False,
+    # ----
     "country": "Sweden",  # Used to get the countries holidays.
-    "fullDayHours": 8,  # Number of hours you report per day
+    "fullDayHours": 8,  # Number of hours you report per day ie. No. of hours you work.
     "weeks": 1,  # Number of weeks back you'd like to report time on if any remaining hours left. (Note* It will add the antire entry to that day and not just the 1 that was missing.)
 }
 # https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md
 # Most of the Parameters below are self explainatory but you could also find more info at above link.
 # All entries will be created from 8 am and onwards.
-if settings["reportVacation"] == False:
+
+if (
+    settings["reportWork"] == True
+    and settings["reportVacation"] == False
+    and settings["reportParentalLeave"] == False
+):
     inputObj = {
         "Mon": {
             "Customers": {
@@ -68,8 +77,11 @@ if settings["reportVacation"] == False:
             }
         },
     }
-else:
-    # if you are going on vacation then you might want to automate those entries instead of your normal working days.
+elif (
+    settings["reportVacation"] == True
+    and settings["reportParentalLeave"] == False
+    and settings["reportWork"] == False
+):
     inputObj = {
         "Mon": {
             "Customers": {
@@ -112,3 +124,62 @@ else:
             }
         },
     }
+elif (
+    settings["reportParentalLeave"] == True
+    and settings["reportVacation"] == False
+    and settings["reportWork"] == False
+):
+    inputObj = {
+        "Mon": {
+            "Customers": {
+                "YourCompanyName": {
+                    "Name": "YourCompanyName",
+                    "Description": "Parental Leave",
+                    "ProjectID": 123420425,
+                    "DurationInHours": 8,
+                },
+            }
+        },
+        "Tue": {
+            "Customers": {
+                "YourCompanyName": {
+                    "Name": "YourCompanyName",
+                    "Description": "Parental Leave",
+                    "ProjectID": 123420425,
+                    "DurationInHours": 8,
+                },
+            }
+        },
+        "Wed": {
+            "Customers": {
+                "YourCompanyName": {
+                    "Name": "YourCompanyName",
+                    "Description": "Parental Leave",
+                    "ProjectID": 123420425,
+                    "DurationInHours": 8,
+                },
+            }
+        },
+        "Thu": {
+            "Customers": {
+                "YourCompanyName": {
+                    "Name": "YourCompanyName",
+                    "Description": "Parental Leave",
+                    "ProjectID": 123420425,
+                    "DurationInHours": 8,
+                },
+            }
+        },
+        "Fri": {
+            "Customers": {
+                "YourCompanyName": {
+                    "Name": "YourCompanyName",
+                    "Description": "Parental Leave",
+                    "ProjectID": 123420425,
+                    "DurationInHours": 8,
+                },
+            }
+        },
+    }
+else:
+    print('Warning: Only one "report setting" can be set to True at a given time.')
