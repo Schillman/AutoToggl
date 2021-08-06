@@ -9,10 +9,28 @@ from collections import OrderedDict, defaultdict
 from datetime import date, datetime, timedelta
 from operator import itemgetter
 
-import holidays
-import requests
-
 import config
+
+
+def cls():
+    os.system("cls" if os.name == "nt" else "clear")
+
+
+def install_and_import(package):
+    try:
+        importlib.import_module(package)
+    except ImportError:
+        import pip
+
+        pip.main(["install", package])
+    finally:
+        globals()[package] = importlib.import_module(package)
+
+
+install_and_import("holidays")
+install_and_import("requests")
+
+cls()
 
 
 def apiCall(token, url, method="GET", body=None):
