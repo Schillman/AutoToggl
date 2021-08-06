@@ -3,6 +3,7 @@ import collections
 import importlib
 import json
 import os
+import sys
 import time
 from collections import OrderedDict, defaultdict
 from datetime import date, datetime, timedelta
@@ -20,13 +21,30 @@ def apiCall(token, url, method="GET", body=None):
         "Authorization": "Basic "
         + base64.b64encode(authToken.encode("ascii")).decode("utf-8")
     }
-
     if method == "GET":
-        return requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers)
     elif method == "POST" and body:
-        return requests.post(url, headers=headers, data=(json.dumps(body)))
+        response = requests.post(url, headers=headers, data=(json.dumps(body)))
     else:
         raise ValueError("Missing HTTP method or Body")
+
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        print(
+            (
+                "{} HTTP call was not successfull"
+                + "\n"
+                + str(e.args[0])
+                + "\n"
+                + "Response: "
+                + str(e.response.text)
+            ).format(method)
+        )
+        sys.exit()
+
+    # status code 200
+    return response
 
 
 def whereObject(list, Attrib, searchWord, valueName):
@@ -58,20 +76,46 @@ class LogEntry:
 
 
 class AutoToggl:
-    def __init__(self, projects, weeks):
-        self.startDate = date.today() - timedelta(weeks=weeks)
+    def __init__(self, projects, **Settings):
+        # Variables needed throughout the code.
+        self.token = Settings["token"]
+        self.HttpEncode = Settings["HttpEncode"]
+        self.CurrentTimeZone = Settings["CurrentTimeZone"]
+
+        country = Settings["country"]
+        fullDayHours = Settings["fullDayHours"]
+
+        if Settings["startDate"] and Settings["endDate"]:
+            print(
+                "\n---\nLooking for time to report from {} to {}\n---\n".format(
+                    Settings["startDate"], Settings["endDate"]
+                )
+            )
+            self.startDate = date.fromisoformat(Settings["startDate"])
+            endDate = date.fromisoformat(Settings["endDate"])
+        else:
+            print(
+                "\n---\nLooking for time to report from {} till today\n---\n".format(
+                    (date.today() - timedelta(weeks=Settings["weeks"]))
+                )
+            )
+            self.startDate = date.today() - timedelta(weeks=Settings["weeks"])
+            endDate = date.today()
+        print(
+            "Note*** AutoToggl by Schillman will only report time for the current active month even if the last month's dates are shown below.\n"
+        )
         fullDaySeconds = fullDayHours * 3600
         entryUrl = (
             "https://api.track.toggl.com/api/v8/time_entries?start_date="
             + str(self.startDate)
             + "T00:00:00"
-            + HttpEncode
+            + self.HttpEncode
         )
-        self.time_entries = (apiCall(token, entryUrl, "GET")).json()
+        self.time_entries = (apiCall(self.token, entryUrl, "GET")).json()
         self.projects = projects
         self.time_log = OrderedDict()
         # Prepare dates to be able to itirate through them.
-        while self.startDate <= date.today():
+        while self.startDate <= endDate:
             self.time_log[str(self.startDate)] = LogEntry(self.startDate, country)
             self.startDate = self.startDate + timedelta(days=1)
         for day in self.time_log.values():
@@ -123,8 +167,14 @@ class AutoToggl:
             }
 
             fullReport.append((timeReport.copy()))
-
-            if not entry.holiday:  # Only show the remaining if not holiday or saturday
+            # Only show the remaining if not holiday or saturday
+            if weekday == "Sat":
+                print(
+                    "{0:^7}   {1}   {2:^12}  {3:^13}".format(
+                        weekday, entry.date, entry.time, 0
+                    )
+                )
+            elif not entry.holiday:
                 print(
                     "{0:^7}   {1}   {2:^12}  {3:^13}".format(
                         weekday, entry.date, entry.time, entry.remaining
@@ -136,9 +186,7 @@ class AutoToggl:
                         weekday,
                         entry.date,
                         entry.time,
-                        (entry.remaining)
-                        if (weekday == "Sat" or weekday == "Sun")
-                        else 0,
+                        entry.remaining,
                         str(entry.holiday),
                     )
                 )
@@ -150,6 +198,8 @@ class AutoToggl:
                 self.projects.get((entry["WeekDay"])) != None
                 and entry["Remaining"] != 0
                 and entry["Holiday"] == False
+                and entry["Date"].month
+                == datetime.today().month  # Only report current active month
             ):
 
                 project = self.projects[(entry["WeekDay"])]["Customers"].values()
@@ -159,16 +209,16 @@ class AutoToggl:
                             "pid": customer["ProjectID"],
                             "start": str(entry["Date"])
                             + "T08:00:00.000"
-                            + CurrentTimeZone,
+                            + self.CurrentTimeZone,
                             "duration": customer["DurationInHours"] * 3600,
                             "description": customer["Description"],
-                            "created_with": "AutoToggl-BySchillman",
+                            "created_with": "AutoToggl by Schillman",
                         }
                     }
-                    outCome = (
-                        apiCall(token, newTimeEntryURL, "POST", time_entry)
-                    ).json()
 
+                    outCome = apiCall(
+                        self.token, newTimeEntryURL, "POST", time_entry
+                    ).json()
                     if outCome:
                         apiOutCome = {
                             "DurationInHours": customer["DurationInHours"],
@@ -188,7 +238,9 @@ class AutoToggl:
             for item in reported:
                 grouped[item["Date"]].append(item)
 
-            print("\n--- The following timereports has been made by AutoToggl™ ---")
+            print(
+                "\n--- The following time was reported with AutoToggl by Schillman ---"
+            )
             for groupDate in grouped.values():
                 print(
                     "\n{0} - {1}".format(groupDate[0]["Weekday"], groupDate[0]["Date"])
@@ -205,12 +257,27 @@ class AutoToggl:
             print("----\nNo remaining hours to report on.\n----\n")
 
 
-# Settings
-token = config.settings["token"]
-country = config.settings["country"]
-fullDayHours = config.settings["fullDayHours"]
-weeks = config.settings["weeks"]
 inputObject = config.inputObj
+
+# Settings - Keyword arguments to be passed trough to the function AutoToggl
+Settings = {
+    "token": config.settings["token"],
+    "country": config.settings["country"],
+    "fullDayHours": config.settings["fullDayHours"],
+}
+
+if config.settings["startDate"] and config.settings["endDate"]:
+    Settings["startDate"] = config.settings["startDate"]
+    Settings["endDate"] = config.settings["endDate"]
+    Settings["weeks"] = None
+elif config.settings["weeks"]:
+    Settings["startDate"] = None
+    Settings["endDate"] = None
+    Settings["weeks"] = config.settings["weeks"]
+else:
+    print(
+        "Missing setting parameter in config.py. Either 'weeks' and/or 'start/endDate'"
+    )
 
 if time.localtime().tm_isdst == 0:
     offset = time.timezone
@@ -220,11 +287,12 @@ else:
 TimeDiff = int(offset / 60 / 60 * -1)
 
 if TimeDiff >= 0:
-    HttpEncode = "%2B0" + str(TimeDiff) + "%3A00"
-    CurrentTimeZone = "+0" + str(TimeDiff) + ":00"
+    Settings["HttpEncode"] = "%2B0" + str(TimeDiff) + "%3A00"
+    Settings["CurrentTimeZone"] = "+0" + str(TimeDiff) + ":00"
 else:
-    HttpEncode = "%2D0" + str(TimeDiff) + "%3A00"
-    CurrentTimeZone = "-0" + str(TimeDiff) + ":00"
+    Settings["HttpEncode"] = "%2D0" + str(TimeDiff) + "%3A00"
+    Settings["CurrentTimeZone"] = "-0" + str(TimeDiff) + ":00"
 
-Info = AutoToggl(inputObject, weeks)
+Info = AutoToggl(inputObject, **Settings)
 Info.Gather_And_Report()
+"\n\n\n"

@@ -8,6 +8,8 @@ settings = {
     "country": "Sweden",  # Used to get the countries holidays.
     "fullDayHours": 8,  # Number of hours you report per day ie. No. of hours you work.
     "weeks": 1,  # Number of weeks you'd like to go back and report time on, if any remaining hours remains, it will report the entries given in the inputObject (Note* It will add the antire entry to that day and not just the hours that was missing.)
+    "startDate": None,  # "2021-08-02",
+    "endDate": None,  # "2021-08-03",
 }
 # https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md
 # Most of the Parameters below are self explainatory but you could also find more info at above link.
