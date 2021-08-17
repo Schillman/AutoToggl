@@ -111,6 +111,7 @@ class AutoToggl:
             )
             self.startDate = date.fromisoformat(Settings["startDate"])
             endDate = date.fromisoformat(Settings["endDate"])
+            self.specificDates = True
         else:
             print(
                 "\n---\nLooking for time to report from {} till today\n---\n".format(
@@ -119,9 +120,13 @@ class AutoToggl:
             )
             self.startDate = date.today() - timedelta(weeks=Settings["weeks"])
             endDate = date.today()
-        print(
-            "Note*** AutoToggl by Schillman will only report time for the current active month even if the last month's dates are shown below.\n"
-        )
+            self.specificDates = False
+
+        if not self.specificDates:
+            print(
+                f"Reporting {Settings['weeks']} weeks back\nNote*** AutoToggl by Schillman will only report time for the current active month even if the last month's dates are shown below.\n"
+            )
+
         fullDaySeconds = fullDayHours * 3600
         entryUrl = (
             "https://api.track.toggl.com/api/v8/time_entries?start_date="
@@ -216,8 +221,11 @@ class AutoToggl:
                 self.projects.get((entry["WeekDay"])) != None
                 and entry["Remaining"] != 0
                 and entry["Holiday"] == False
-                and entry["Date"].month
-                == datetime.today().month  # Only report current active month
+                and (
+                    entry["Date"].month
+                    == datetime.today().month  # Only report current active month
+                    or self.specificDates
+                )
             ):
 
                 project = self.projects[(entry["WeekDay"])]["Customers"].values()
