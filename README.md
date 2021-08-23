@@ -1,6 +1,8 @@
 # AutoToggl
 An automated way to toggl your day to day working hours.
 
+Toggl API Key can be found under [toggl profile](https://track.toggl.com/profile)
+
 # Config.py
 
 Firstly one need to configure the config.py file. Parameters are described below.
@@ -11,7 +13,7 @@ https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md
 
 ```python
 settings = { 
-"token": "Toggl API KEY found under your Profil on [toggl.com/profile](https://track.toggl.com/profile)",
+"token": "Toggl API KEY found under your Toggl Profil",
 # Nothing hinder you from encrypt this key and import whatever module you need to read it.
 # ***Note*** Do the Import prior to this Settings block if doing so.
 
