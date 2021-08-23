@@ -322,3 +322,4 @@ else:
 Info = AutoToggl(inputObject, **Settings)
 Info.Gather_And_Report()
 "\n\n\n"
+input("Press Enter to Exit...")
