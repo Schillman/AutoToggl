@@ -39,7 +39,7 @@ settings = {
 
 ```
 
-### For reporting <u>**Work**</u> activites add your inputObject as below.
+### For reporting ***Work*** activites add your inputObject as below.
 <br />
 
 ``` python
@@ -117,7 +117,7 @@ if (
     }
 ```
 
-### For reporting <u>**Vacation**</u> activites add your inputObject as below.
+### For reporting ***Vacation*** activites add your inputObject as below.
 <br />
 
 ``` python
@@ -170,7 +170,7 @@ elif (
     }
 ```
 
-### For reporting <u>**ParentalLeave**</u> activites add your inputObject as below.
+### For reporting ***ParentalLeave*** activites add your inputObject as below.
 <br />
 
 ``` python
