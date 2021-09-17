@@ -167,6 +167,7 @@ class AutoToggl:
         fullReport = []
         DAY_INDEX = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         newTimeEntryURL = "https://api.track.toggl.com/api/v8/time_entries"
+        # Printing out the headers only, for readabillity.
         print(
             "{0:7} | {1:^10} | {2:^8} | {3:^9} | {4}".format(
                 "Weekday",
@@ -234,10 +235,11 @@ class AutoToggl:
                         "time_entry": {
                             "pid": customer["ProjectID"],
                             "start": str(entry["Date"])
-                            + "T08:00:00.000"
+                            + "T{0}:00.000".format(customer["startTime"])
                             + self.CurrentTimeZone,
                             "duration": customer["DurationInHours"] * 3600,
                             "description": customer["Description"],
+                            "billable": customer["billable"],
                             "created_with": "AutoToggl by Schillman",
                         }
                     }

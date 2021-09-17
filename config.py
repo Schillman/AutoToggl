@@ -29,6 +29,8 @@ if (
                     "ProjectID": 1676203124,  # Easiest way to find this is to open the project via track.toggl.com
                     # it will look something like this https://track.toggl.com/1959394/projects/<ProjectID>/tasks
                     "DurationInHours": 8,  # How much time you'de like to report on this day for this customer.
+                    "startTime": "08:00",
+                    "billable": True,
                 },
             }
         },
@@ -39,12 +41,16 @@ if (
                     "Description": "WhatEverYouLike",
                     "ProjectID": 1676203124,
                     "DurationInHours": 4,
+                    "startTime": "08:00",
+                    "billable": True,
                 },
                 "CustomerName2": {
                     "Name": "CustomerName2",
                     "Description": "WhatEverYouLike",
                     "ProjectID": 1234567890,
                     "DurationInHours": 4,
+                    "startTime": "12:00",
+                    "billable": True,
                 },
             }
         },
@@ -55,6 +61,8 @@ if (
                     "Description": "WhatEverYouLike",
                     "ProjectID": 1676203124,
                     "DurationInHours": 8,  # How much time you'de like to report on this day for this customer.
+                    "startTime": "08:00",
+                    "billable": True,
                 },
             }
         },
@@ -65,6 +73,8 @@ if (
                     "Description": "WhatEverYouLike",
                     "ProjectID": 1676203124,
                     "DurationInHours": 8,  # How much time you'de like to report on this day for this customer.
+                    "startTime": "08:00",
+                    "billable": True,
                 },
             }
         },
@@ -75,6 +85,8 @@ if (
                     "Description": "WhatEverYouLike",
                     "ProjectID": 1676203124,
                     "DurationInHours": 8,  # How much time you'de like to report on this day for this customer.
+                    "startTime": "08:00",
+                    "billable": True,
                 },
             }
         },
@@ -92,6 +104,8 @@ elif (
                     "Description": "WhatEverYouLike",
                     "ProjectID": 1671243124,
                     "DurationInHours": 8,
+                    "startTime": "08:00",
+                    "billable": False,
                 },
             }
         },
@@ -102,6 +116,8 @@ elif (
                     "Description": "WhatEverYouLike",
                     "ProjectID": 1671243124,
                     "DurationInHours": 8,
+                    "startTime": "08:00",
+                    "billable": False,
                 },
             }
         },
@@ -112,6 +128,8 @@ elif (
                     "Description": "WhatEverYouLike",
                     "ProjectID": 1671243124,
                     "DurationInHours": 8,
+                    "startTime": "08:00",
+                    "billable": False,
                 },
             }
         },
@@ -122,6 +140,8 @@ elif (
                     "Description": "WhatEverYouLike",
                     "ProjectID": 1671243124,
                     "DurationInHours": 8,
+                    "startTime": "08:00",
+                    "billable": False,
                 },
             }
         },
@@ -139,6 +159,8 @@ elif (
                     "Description": "Parental Leave",
                     "ProjectID": 123420425,
                     "DurationInHours": 8,
+                    "startTime": "08:00",
+                    "billable": False,
                 },
             }
         },
@@ -149,6 +171,8 @@ elif (
                     "Description": "Parental Leave",
                     "ProjectID": 123420425,
                     "DurationInHours": 8,
+                    "startTime": "08:00",
+                    "billable": False,
                 },
             }
         },
@@ -159,6 +183,8 @@ elif (
                     "Description": "Parental Leave",
                     "ProjectID": 123420425,
                     "DurationInHours": 8,
+                    "startTime": "08:00",
+                    "billable": False,
                 },
             }
         },
@@ -169,6 +195,8 @@ elif (
                     "Description": "Parental Leave",
                     "ProjectID": 123420425,
                     "DurationInHours": 8,
+                    "startTime": "08:00",
+                    "billable": False,
                 },
             }
         },
@@ -179,6 +207,8 @@ elif (
                     "Description": "Parental Leave",
                     "ProjectID": 123420425,
                     "DurationInHours": 8,
+                    "startTime": "08:00",
+                    "billable": False,
                 },
             }
         },
