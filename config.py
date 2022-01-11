@@ -8,6 +8,7 @@ settings = {
     "country": "Sweden",  # Used to get the countries holidays.
     "fullDayHours": 8,  # Number of hours you report per day ie. No. of hours you work.
     "weeks": 1,  # Number of weeks you'd like to go back and report time on, if any remaining hours remains, it will report the entries given in the inputObject (Note* It will add the antire entry to that day and not just the hours that was missing.)
+    "allowPreviousMonth": False,  # If set to True, it will allow you to report time for the previous month as well. (Note* if the previous month locked then the code will error out
     "startDate": None,  # "2021-08-02",
     "endDate": None,  # "2021-08-03",
 }

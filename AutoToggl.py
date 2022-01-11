@@ -99,6 +99,7 @@ class AutoToggl:
         self.token = Settings["token"]
         self.HttpEncode = Settings["HttpEncode"]
         self.CurrentTimeZone = Settings["CurrentTimeZone"]
+        self.allowPreviousMonth = Settings["allowPreviousMonth"]
 
         country = Settings["country"]
         fullDayHours = Settings["fullDayHours"]
@@ -122,10 +123,12 @@ class AutoToggl:
             endDate = date.today()
             self.specificDates = False
 
-        if not self.specificDates:
+        if self.specificDates == False and self.allowPreviousMonth == False:
             print(
-                f"Reporting {Settings['weeks']} weeks back\nNote*** AutoToggl by Schillman will only report time for the current active month even if the last month's dates are shown below.\n"
+                f"Reporting {Settings['weeks']} week(s) back\nNote*** AutoToggl by Schillman will only report time for the current active month even if the last month's dates are shown below.\n"
             )
+        else:
+            print(f"Reporting {Settings['weeks']} week(s) back\n")
 
         fullDaySeconds = fullDayHours * 3600
         entryUrl = (
@@ -220,12 +223,13 @@ class AutoToggl:
         for entry in fullReport:
             if (
                 self.projects.get((entry["WeekDay"])) != None
-                and entry["Remaining"] != 0
+                and entry["Remaining"] > 0
                 and entry["Holiday"] == False
                 and (
                     entry["Date"].month
                     == datetime.today().month  # Only report current active month
                     or self.specificDates
+                    or self.allowPreviousMonth
                 )
             ):
 
@@ -292,6 +296,7 @@ Settings = {
     "token": config.settings["token"],
     "country": config.settings["country"],
     "fullDayHours": config.settings["fullDayHours"],
+    "allowPreviousMonth": config.settings["allowPreviousMonth"],
 }
 
 if config.settings["startDate"] and config.settings["endDate"]:
