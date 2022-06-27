@@ -3,6 +3,48 @@ An automated way to toggl your day to day working hours.
 
 Toggl API Key can be found under [toggl profile](https://track.toggl.com/profile)
 
+## Result Example
+``` output
+---
+Looking for time to report from 2022-06-20 till today
+---
+
+Reporting 1 week(s) back
+
+Weekday |    Date    | Reported (h) | Remaining (h) | Holiday (Native language)
+  Mon     2022-06-20       8.0             0
+  Tue     2022-06-21        0             8.0
+  Wed     2022-06-22        0             8.0
+  Thu     2022-06-23        0             8.0
+  Fri     2022-06-24        0              0          Midsommarafton
+  Sat     2022-06-25        0              0
+  Sun     2022-06-26        0              0          Söndag
+  Mon     2022-06-27        0             8.0
+
+--- The following time was reported with AutoToggl by Schillman ---
+
+Tue - 2022-06-21
+CompanyName: <CustomerName>
+        Duration: <8>
+        Description: <WhatEverYouLike>
+
+Wed - 2022-06-22
+CompanyName: <CustomerName>
+        Duration: <8>
+        Description: <WhatEverYouLike>
+
+Thu - 2022-06-23
+CompanyName: <CustomerName>
+        Duration: <8>
+        Description: <WhatEverYouLike>
+
+Mon - 2022-06-27
+CompanyName: <CustomerName>
+        Duration: <8>
+        Description: <WhatEverYouLike>
+Press Enter to Exit...
+```
+
 # Config.py
 
 Firstly one need to configure the config.py file. Parameters are described below.
